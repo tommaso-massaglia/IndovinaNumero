@@ -10,8 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171" fx:controller="it.polito.tdp.numero.NumeroController">
+<BorderPane xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polito.tdp.numero.NumeroController">
    <top>
       <Label text="Indovina il numero!" textFill="#ee0606" BorderPane.alignment="CENTER">
          <font>
@@ -37,7 +36,7 @@
             <HBox fx:id="boxControlloTentativi" disable="true">
                <children>
                   <Label text="Tentativo" />
-                  <TextField fx:id="txtTentativo" />
+                  <TextField fx:id="txtTentativo" onKeyPressed="#onKeyPressed" />
                   <Button mnemonicParsing="false" onAction="#handleProvaTentativo" text="Prova" />
                </children>
             </HBox>
