@@ -1,18 +1,25 @@
 package it.polito.tdp.numero.model;
 
 import java.security.InvalidParameterException;
+import java.util.ArrayList;
+import java.util.List;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 
 public class NumeroModel {
 	
-	private final int NMAX = 100;
-	private final int TMAX = 8;
-
+	private IntegerProperty NMAX = new SimpleIntegerProperty(100) ;
+	private IntegerProperty TMAX = new SimpleIntegerProperty(8) ;
+	private List<Integer> inseriti;
 	private int segreto;
-	private int tentativiFatti;
-	private boolean inGioco;
+	private BooleanProperty inGioco = new SimpleBooleanProperty(false) ;
+	private IntegerProperty tentativiFatti = new SimpleIntegerProperty();
 	
 	public NumeroModel() {
-		this.inGioco = false;
+		this.inGioco.set(false);
+		inseriti = new ArrayList<Integer>();
 	}
 	
 	/**
@@ -20,9 +27,10 @@ public class NumeroModel {
 	 */
 
 	public void newGame() {
-		this.segreto = (int) (Math.random() * NMAX) + 1;
-		this.tentativiFatti = 0;
-		this.inGioco = true;
+		this.segreto = (int) (Math.random() * NMAX.get()) + 1;
+		this.inseriti.clear();
+		this.tentativiFatti.set(0);;
+		this.inGioco.set(true);;
 	}
 	
 	/**
@@ -34,7 +42,7 @@ public class NumeroModel {
 	public int tentativo(int t) {
 		
 		// controllo se la partita è in corso
-		if (!inGioco) {
+		if (!inGioco.get()) {
 			throw new IllegalStateException("La partita è terminata");
 		}
 		
@@ -43,14 +51,16 @@ public class NumeroModel {
 			throw new InvalidParameterException(String.format("Devi inserire un numero tra %d e %d", 1, NMAX));
 		}
 		
-		this.tentativiFatti++;
+		this.inseriti.add(t);
+		
+		this.tentativiFatti.set(this.tentativiFatti.get()+1);;
 		if (this.tentativiFatti == this.TMAX){
-			this.inGioco = false;
+			this.inGioco.set(false);;
 		}
 		
 		// gestisci tentativo
 		if (t == this.segreto) {
-			inGioco = false;
+			inGioco.set(false);;
 			return 0;
 		}
 		
@@ -66,25 +76,32 @@ public class NumeroModel {
 	 */
 	
 	public boolean tentativoValido(int t) {
-		if (t<1 || t>NMAX) {
+		if (t<1 || t>NMAX.get() || this.inseriti.contains(t)==true) {
 			return false;
-		} else { return true;}
+		} 
+		return true;
+		
 	}
 
 	public int getSegreto() {
 		return segreto;
 	}
 
-	public int getTentativiFatti() {
-		return tentativiFatti;
-	}
-
 	public boolean isInGioco() {
-		return inGioco;
+		return inGioco.get();
 	}
 
 	public int getTMAX() {
-		return TMAX;
+		return TMAX.get();
 	}
 
+	public final IntegerProperty tentativiFattiProperty() {
+		return this.tentativiFatti;
+	}
+	
+
+	public final int getTentativiFatti() {
+		return this.tentativiFattiProperty().get();
+	}
+	
 }
